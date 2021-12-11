@@ -41,7 +41,7 @@ class Authenticator {
 
   handshakeCallback(options, cb) {
     const fn = e => {
-      if (e.data === 'authorizing:' + options.provider && e.origin === this.base_url) {
+      if (e.data === 'authorizing:' + options.provider && e.origin === new URL(this.base_url).origin) {
         window.removeEventListener('message', fn, false);
         window.addEventListener('message', this.authorizeCallback(options, cb), false);
         return this.authWindow.postMessage(e.data, e.origin);
@@ -52,7 +52,7 @@ class Authenticator {
 
   authorizeCallback(options, cb) {
     const fn = e => {
-      if (e.origin !== this.base_url) {
+      if (e.origin !== new URL(this.base_url).origin) {
         return;
       }
 
